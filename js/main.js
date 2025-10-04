@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function play() {
         if (playlist.playlist.length === 0) return;
         if (!visualizer.audioContext) initAudio();
-        audio.play();
+        audio.play().catch(e => console.error("Playback error:", e));
         visualizer.isPlaying = true;
         UI.setPlayPause(true);
     }
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.addEventListener('ended', () => {
         if (loopState === 'all') { playlist.next(); }
         else if (loopState === 'none' && playlist.currentSongIndex < playlist.playlist.length - 1) { playlist.next(); }
-        else { pause(); audio.currentTime = 0; }
+        else if (loopState === 'none' && playlist.currentSongIndex >= playlist.playlist.length -1) { pause(); audio.currentTime = 0; }
     });
 
     audio.addEventListener('timeupdate', () => UI.updateProgressBar(audio));
@@ -62,18 +62,15 @@ document.addEventListener('DOMContentLoaded', () => {
         else { loopState = 'none'; btn.title = 'Loop: Off'; btn.classList.remove('loop-one'); audio.loop = false; }
     });
 
-    document.querySelectorAll('[id$="-btn"]').forEach(btn => { const modal = document.getElementById(btn.id.replace('-btn', '-modal')); if (modal) btn.addEventListener('click', () => { if(modal.id === 'settings-modal') { tempSettings = {...visualizer.settings}; Object.entries(settingsMap).forEach(([id, key]) => document.getElementById(id).value = visualizer.settings[key]); } modal.style.display = 'block'; }); });
+    document.querySelectorAll('[id$="-btn"]').forEach(btn => { const modal = document.getElementById(btn.id.replace('-btn', '-modal')); if (modal) btn.addEventListener('click', () => { if(modal.id === 'settings-modal') { tempSettings = {...visualizer.settings}; Object.entries(settingsMap).forEach(([id, key]) => {if(document.getElementById(id)) document.getElementById(id).value = visualizer.settings[key]; }); } modal.style.display = 'block'; }); });
     document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', () => btn.closest('.modal').style.display = 'none'));
     
     document.getElementById('fullscreen-btn').addEventListener('click', () => document.getElementById('player-container').requestFullscreen());
-    document.getElementById('hide-controls-btn').addEventListener('click', () => { document.getElementById('controls-area').classList.add('hidden'); document.getElementById('show-controls-btn').hidden = false; });
-    document.getElementById('show-controls-btn').addEventListener('click', () => { document.getElementById('controls-area').classList.remove('hidden'); document.getElementById('show-controls-btn').hidden = true; });
     
     document.querySelectorAll('#settings-modal input, #settings-modal select').forEach(el => {
         el.addEventListener('change', e => {
-            const key = settingsMap[e.target.id];
-            if (!key) return;
-            const value = e.target.type === 'range' ? parseFloat(e.target.value) : e.target.value;
+            const key = settingsMap[e.target.id]; if (!key) return;
+            const value = e.target.type.includes('range') ? parseFloat(e.target.value) : e.target.value;
             tempSettings[key] = value;
             if (key === 'fillType') { document.getElementById('custom-color-setting').hidden = e.target.value !== 'custom_color'; }
         });

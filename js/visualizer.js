@@ -18,7 +18,12 @@ class Visualizer {
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this.analyser = this.audioContext.createAnalyser();
         this.source = this.audioContext.createMediaElementSource(audioElement);
-        // The source will be connected to the equalizer first, then to the analyser
+    }
+
+    applySettings(newSettings) {
+        this.settings = Object.assign({}, this.settings, newSettings);
+        document.getElementById('visualizer-wrapper').style.backgroundColor = this.settings.backgroundColor;
+        this.updateAnalyserSettings();
     }
 
     updateAnalyserSettings() {
@@ -32,28 +37,21 @@ class Visualizer {
     renderFrame() {
         requestAnimationFrame(() => this.renderFrame());
         if (!this.isPlaying || !this.analyser) return;
-
         this.analyser.getByteFrequencyData(this.dataArray);
-
         const dpr = window.devicePixelRatio || 1;
         const rect = this.canvas.getBoundingClientRect();
         this.canvas.width = rect.width * dpr;
         this.canvas.height = rect.height * dpr;
         this.ctx.scale(dpr, dpr);
         const { width, height } = rect;
-        
         const centerX = width / 2;
         const centerY = height / 2;
-
         this.ctx.clearRect(0, 0, width, height);
         this.ctx.fillStyle = this.settings.spectrumColor;
         this.ctx.strokeStyle = this.settings.spectrumColor;
-
         const isRingType = this.settings.type.startsWith('ring');
         this.centerImage.classList.toggle('is-ring', isRingType);
-
         const baseRadius = (Math.min(width, height) * 0.18) * this.settings.size;
-        
         if (isRingType) {
             this.centerImage.style.width = `${baseRadius * 2}px`;
             this.centerImage.style.height = `${baseRadius * 2}px`;
@@ -64,44 +62,101 @@ class Visualizer {
                 this.ctx.fill();
             }
         } else {
-             this.centerImage.style.width = '0px';
-             this.centerImage.style.height = '0px';
+            this.centerImage.style.width = '0px';
+            this.centerImage.style.height = '0px';
         }
-
+        const barCount = this.settings.barCount;
         switch (this.settings.type) {
-            case 'ring_bars': {
+            case 'ring_bars':
+            case 'ring_smooth': {
                 const radius = baseRadius * 1.1;
-                const barWidth = 3; 
-                this.ctx.lineWidth = barWidth;
-                for (let i = 0; i < this.settings.barCount; i++) {
+                this.ctx.lineWidth = 3;
+                if (this.settings.type === 'ring_smooth') this.ctx.beginPath();
+                for (let i = 0; i < barCount; i++) {
                     const barHeight = Math.pow(this.dataArray[i] / 255, this.settings.sensitivity) * height * 0.2;
-                    const angle = (i / this.settings.barCount) * 2 * Math.PI;
+                    const angle = (i / barCount) * 2 * Math.PI;
                     const x1 = centerX + Math.cos(angle) * radius;
                     const y1 = centerY + Math.sin(angle) * radius;
                     const x2 = centerX + Math.cos(angle) * (radius + barHeight);
                     const y2 = centerY + Math.sin(angle) * (radius + barHeight);
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(x1, y1);
-                    this.ctx.lineTo(x2, y2);
+                    if (this.settings.type === 'ring_bars') {
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(x1, y1);
+                        this.ctx.lineTo(x2, y2);
+                        this.ctx.stroke();
+                    } else {
+                        i === 0 ? this.ctx.moveTo(x2, y2) : this.ctx.lineTo(x2, y2);
+                    }
+                }
+                if (this.settings.type === 'ring_smooth') {
+                    this.ctx.closePath();
+                    this.ctx.stroke();
+                }
+                break;
+            }
+            case 'bar_bars':
+            case 'bar_smooth': {
+                const barWidth = width / barCount;
+                if (this.settings.type === 'bar_smooth') this.ctx.beginPath();
+                for (let i = 0; i < barCount; i++) {
+                    const barHeight = Math.pow(this.dataArray[i] / 255, this.settings.sensitivity) * height * 0.9 * this.settings.size;
+                    const x = i * barWidth;
+                    const y = height - barHeight;
+                    if (this.settings.type === 'bar_bars') {
+                        this.ctx.fillRect(x, y, barWidth * 0.9, barHeight);
+                    } else {
+                        i === 0 ? this.ctx.moveTo(x, y) : this.ctx.lineTo(x, y);
+                    }
+                }
+                if (this.settings.type === 'bar_smooth') {
+                    this.ctx.lineTo(width, height);
+                    this.ctx.lineTo(0, height);
+                    this.ctx.closePath();
+                    this.ctx.stroke();
+                }
+                break;
+            }
+            case 'linear_mirror_bars':
+            case 'linear_mirror_smooth': {
+                const barWidth = width / barCount;
+                if (this.settings.type === 'linear_mirror_smooth') this.ctx.beginPath();
+                for (let i = 0; i < barCount; i++) {
+                    const barHeight = Math.pow(this.dataArray[i] / 255, this.settings.sensitivity) * height * 0.8 * this.settings.size;
+                    const x = centerX + ((i - barCount / 2) * barWidth);
+                    const y = centerY - barHeight / 2;
+                    if (this.settings.type === 'linear_mirror_bars') {
+                        this.ctx.fillRect(x, y, barWidth * 0.8, barHeight);
+                    } else {
+                        const smoothX = centerX + ((i - barCount / 2) * barWidth);
+                        i === 0 ? this.ctx.moveTo(smoothX, centerY - barHeight) : this.ctx.lineTo(smoothX, centerY - barHeight);
+                    }
+                }
+                if (this.settings.type === 'linear_mirror_smooth') {
+                    for (let i = barCount - 1; i >= 0; i--) {
+                        const barHeight = Math.pow(this.dataArray[i] / 255, this.settings.sensitivity) * height * 0.8 * this.settings.size;
+                        const smoothX = centerX + ((i - barCount / 2) * barWidth);
+                        this.ctx.lineTo(smoothX, centerY + barHeight);
+                    }
+                    this.ctx.closePath();
                     this.ctx.stroke();
                 }
                 break;
             }
             case 'monstercat': {
                 const barCount = 64;
-                const barWidth = width / barCount * 0.7;
-                const barSpacing = width / barCount * 0.3;
-                let x = centerX - (width / 2);
+                const totalWidth = width * 0.8;
+                const barWidth = totalWidth / barCount * 0.7;
+                const barSpacing = totalWidth / barCount * 0.3;
+                let x = centerX - (totalWidth / 2);
                 for (let i = 0; i < barCount; i++) {
                     const dataIndex = Math.floor(i * (this.bufferLength / barCount));
-                    let barHeight = Math.pow(this.dataArray[dataIndex] / 255, this.settings.sensitivity) * height * 0.9;
+                    let barHeight = Math.pow(this.dataArray[dataIndex] / 255, this.settings.sensitivity) * height * 0.9 * this.settings.size;
                     barHeight = Math.max(2, barHeight);
                     this.ctx.fillRect(x, height - barHeight, barWidth, barHeight);
                     x += barWidth + barSpacing;
                 }
                 break;
             }
-            // Other cases for bar, linear mirror, etc. would go here
         }
     }
 }

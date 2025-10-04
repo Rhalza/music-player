@@ -37,10 +37,8 @@ class Visualizer {
         this.ctx.fillStyle = this.settings.spectrumColor; this.ctx.strokeStyle = this.settings.spectrumColor;
         const isRingType = this.settings.type.startsWith('ring');
         this.centerImage.classList.toggle('is-ring', isRingType);
-        
         const maxVisualRadius = (Math.min(width, height) / 2) * 0.9;
         const baseRadius = maxVisualRadius * 0.4 * this.settings.size;
-
         if (isRingType) {
             this.centerImage.style.width = `${baseRadius * 2}px`; this.centerImage.style.height = `${baseRadius * 2}px`;
             if (this.settings.fillType !== 'image' && this.settings.fillType !== 'hollow') {

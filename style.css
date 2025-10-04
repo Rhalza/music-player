@@ -1,0 +1,163 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.music-container {
+    width: 100%;
+    max-width: 800px;
+    background-color: #111;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+#visualizer-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+}
+
+#spectrum-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+#center-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.song-info {
+    text-align: center;
+    padding: 20px;
+}
+
+.controls {
+    padding: 20px;
+}
+
+.progress-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    background-color: #444;
+    height: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.progress {
+    background-color: #fff;
+    width: 0;
+    height: 100%;
+    border-radius: 5px;
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 15px;
+}
+
+.play-pause .fa-pause {
+    display: none;
+}
+
+.playing .fa-play {
+    display: none;
+}
+
+.playing .fa-pause {
+    display: block;
+}
+
+.volume-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.extra-buttons {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.extra-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 15px;
+}
+.extra-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #222;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}

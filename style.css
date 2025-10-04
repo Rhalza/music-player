@@ -48,7 +48,7 @@ select,input[type="color"],.action-btn{background-color:#333;color:#fff;border:1
 #playlist li .remove-song-btn{cursor:pointer;margin-left:10px;color:var(--secondary-text);}
 #playlist li .remove-song-btn:hover{color:#ff4d4d;}
 #playlist li.dragging{opacity:0.5;}
-#equalizer-bands{display:flex;justify-content:space-around;height:200px;padding:20px 10px 10px 10px;margin-top:10px;}
+#equalizer-bands{display:flex;justify-content:space-around;height:200px;padding:120px 10px 10px 10px;margin-top:10px;}
 .band{display:flex;flex-direction:column;align-items:center;}
 .band .slider-container{position:relative;width:20px;height:150px;}
 .band input[type=range]{-webkit-appearance:none;width:150px;height:20px;background:transparent;cursor:pointer;position:absolute;top:65px;left:-65px;transform:rotate(-90deg);}

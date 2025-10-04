@@ -12,13 +12,11 @@
             <canvas id="spectrum-canvas"></canvas>
             <img id="center-image" src="rhalza.png" alt="Album Art">
         </div>
-
         <div id="controls-area">
             <div class="song-info">
                 <h2 id="song-title">No Song Loaded</h2>
                 <h3 id="song-artist">Upload a song or folder to begin</h3>
             </div>
-
             <div class="progress-container">
                 <div class="progress-bar-wrapper">
                     <div class="progress-bar"></div>
@@ -28,7 +26,6 @@
                     <span class="duration">0:00</span>
                 </div>
             </div>
-
             <div class="main-controls">
                 <button id="prev-btn" class="control-btn" title="Previous"><i class="fas fa-step-backward"></i></button>
                 <button id="rewind-btn" class="control-btn" title="Rewind 10s"><i class="fas fa-undo"></i></button>
@@ -39,7 +36,6 @@
                 <button id="forward-btn" class="control-btn" title="Forward 10s"><i class="fas fa-redo"></i></button>
                 <button id="next-btn" class="control-btn" title="Next"><i class="fas fa-step-forward"></i></button>
             </div>
-
             <div class="side-controls">
                 <div class="volume-container">
                     <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
@@ -55,9 +51,7 @@
             </div>
         </div>
     </div>
-
     <audio id="audio" crossorigin="anonymous"></audio>
-
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
@@ -76,10 +70,8 @@
             </div>
         </div>
     </div>
-
     <div id="playlist-modal" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Playlist</h2><div class="modal-scroll-content"><ul id="playlist"></ul><div class="upload-buttons"><button id="upload-btn" class="action-btn">Upload Files</button><button id="upload-folder-btn" class="action-btn">Upload Folder</button></div><input type="file" id="song-upload" multiple accept="audio/*" hidden><input type="file" id="folder-upload" webkitdirectory directory multiple hidden></div></div></div>
     <div id="eq-modal" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Equalizer</h2><div class="modal-scroll-content"><div class="setting"><label for="eq-presets">Presets</label><select id="eq-presets"><option value="flat">Flat</option><option value="rock">Rock</option><option value="pop">Pop</option><option value="classical">Classical</option><option value="dance">Dance</option></select></div><div id="equalizer-bands"></div></div></div></div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <script src="js/visualizer.js"></script>
     <script src="js/equalizer.js"></script>

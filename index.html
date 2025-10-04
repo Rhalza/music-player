@@ -6,18 +6,19 @@
     <title>Rhalza - Music Player</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
+</head><body>
     <div id="player-container">
         <div id="visualizer-wrapper">
             <canvas id="spectrum-canvas"></canvas>
             <img id="center-image" src="rhalza.png" alt="Album Art">
         </div>
 
+        <button id="show-controls-btn" class="control-btn floating-btn" title="Show Controls" hidden><i class="fas fa-chevron-up"></i></button>
+
         <div id="controls-area">
             <div class="song-info">
                 <h2 id="song-title">No Song Loaded</h2>
-                <h3 id="song-artist">Upload a song to begin</h3>
+                <h3 id="song-artist">Upload a song or folder to begin</h3>
             </div>
 
             <div class="progress-container">
@@ -51,6 +52,7 @@
                     <button id="eq-btn" class="control-btn" title="Equalizer"><i class="fas fa-sliders-h"></i></button>
                     <button id="settings-btn" class="control-btn" title="Spectrum Settings"><img src="spectrum.png" alt="Spectrum Settings"></button>
                     <button id="fullscreen-btn" class="control-btn" title="Fullscreen"><i class="fas fa-expand"></i></button>
+                    <button id="hide-controls-btn" class="control-btn" title="Hide Controls"><i class="fas fa-chevron-down"></i></button>
                 </div>
             </div>
         </div>
@@ -58,55 +60,21 @@
 
     <audio id="audio" crossorigin="anonymous"></audio>
 
+    <!-- Modals -->
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <h2>Spectrum Settings</h2>
             <div class="modal-scroll-content">
-                <div class="setting">
-                    <label for="spectrum-type">Spectrum Type</label>
-                    <select id="spectrum-type">
-                        <option value="ring_bars">Ring (Bars)</option>
-                        <option value="ring_smooth">Ring (Smooth)</option>
-                        <option value="bar_bars">Bar (Bars)</option>
-                        <option value="bar_smooth">Bar (Smooth)</option>
-                        <option value="linear_mirror_bars">Linear Mirror (Bars)</option>
-                        <option value="linear_mirror_smooth">Linear Mirror (Smooth)</option>
-                        <option value="monstercat">Monstercat Style</option>
-                    </select>
-                </div>
-                <div class="setting">
-                    <label for="center-fill-type">Center Fill Type</label>
-                    <select id="center-fill-type">
-                        <option value="image">Image</option>
-                        <option value="spectrum_color">Fill with Spectrum Color</option>
-                        <option value="custom_color">Custom Solid Color</option>
-                    </select>
-                </div>
-                <div class="setting" id="custom-color-setting">
-                    <label for="solid-color-picker">Custom Fill Color</label>
-                    <input type="color" id="solid-color-picker" value="#1A1A1A">
-                </div>
-                 <div class="setting">
-                    <label for="spectrum-color">Spectrum Color</label>
-                    <input type="color" id="spectrum-color" value="#FFFFFF">
-                </div>
-                <div class="setting">
-                    <label for="smoothing">Smoothing</label>
-                    <input type="range" id="smoothing" min="0.0" max="0.9" step="0.01" value="0.5">
-                </div>
-                <div class="setting">
-                    <label for="bar-amount">Number of Bars</label>
-                    <input type="range" id="bar-amount" min="32" max="1024" step="2" value="256">
-                </div>
-                <div class="setting">
-                    <label for="sensitivity">Sensitivity</label>
-                    <input type="range" id="sensitivity" min="1" max="5" step="0.1" value="1.5">
-                </div>
-                 <div class="setting">
-                    <label for="size">Size</label>
-                    <input type="range" id="size" min="0.1" max="1.5" step="0.01" value="1">
-                </div>
+                <div class="setting"><label for="spectrum-type">Spectrum Type</label><select id="spectrum-type"><option value="monstercat">Monstercat</option><option value="ring_bars">Ring (Bars)</option><option value="ring_smooth">Ring (Smooth)</option><option value="bar_bars">Bar (Bars)</option><option value="linear_mirror_bars">Linear Mirror (Bars)</option></select></div>
+                <div class="setting"><label for="center-fill-type">Center Fill Type</label><select id="center-fill-type"><option value="image">Image</option><option value="hollow">Hollow</option><option value="spectrum_color">Spectrum Color Fill</option><option value="custom_color">Custom Color Fill</option></select></div>
+                <div class="setting" id="custom-color-setting" hidden><label for="solid-color-picker">Custom Fill Color</label><input type="color" id="solid-color-picker" value="#1A1A1A"></div>
+                <div class="setting"><label for="spectrum-color">Spectrum Color</label><input type="color" id="spectrum-color" value="#FFFFFF"></div>
+                <div class="setting"><label for="background-color">Background Color</label><input type="color" id="background-color" value="#000000"></div>
+                <div class="setting"><label for="smoothing">Smoothing</label><input type="range" id="smoothing" min="0.0" max="0.95" step="0.01" value="0.8"></div>
+                <div class="setting"><label for="bar-amount">Number of Bars</label><input type="range" id="bar-amount" min="32" max="1024" step="2" value="256"></div>
+                <div class="setting"><label for="sensitivity">Sensitivity</label><input type="range" id="sensitivity" min="1" max="5" step="0.1" value="2.5"></div>
+                <div class="setting"><label for="size">Size</label><input type="range" id="size" min="0.1" max="1.5" step="0.01" value="1"></div>
             </div>
         </div>
     </div>
@@ -117,13 +85,28 @@
             <h2>Playlist</h2>
             <div class="modal-scroll-content">
                 <ul id="playlist"></ul>
-                <button id="upload-btn" class="action-btn">Upload Songs</button>
-                <input type="file" id="song-upload" multiple accept="audio/*" hidden>
+                <div class="upload-buttons"><button id="upload-btn" class="action-btn">Upload Files</button><button id="upload-folder-btn" class="action-btn">Upload Folder</button></div>
+                <input type="file" id="song-upload" multiple accept="audio/*" hidden><input type="file" id="folder-upload" webkitdirectory directory multiple hidden>
             </div>
         </div>
     </div>
-    
+
+    <div id="eq-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Equalizer</h2>
+            <div class="modal-scroll-content">
+                <div class="setting"><label for="eq-presets">Presets</label><select id="eq-presets"><option value="flat">Flat</option><option value="rock">Rock</option><option value="pop">Pop</option><option value="classical">Classical</option><option value="dance">Dance</option></select></div>
+                <div id="equalizer-bands"></div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
-    <script src="script.js"></script>
+    <script src="js/visualizer.js"></script>
+    <script src="js/equalizer.js"></script>
+    <script src="js/playlist.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

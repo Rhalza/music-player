@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function pause() {
         audio.pause(); visualizer.isPlaying = false; UI.setPlayPause(false);
     }
-
     function updateVolumeIcon(volume) {
         const volumeBtnIcon = document.querySelector('#volume-btn i');
         if (volume === 0) { volumeBtnIcon.className = 'fas fa-volume-mute'; }
@@ -62,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else { loopState = 'none'; btn.title = 'Loop: Off'; btn.classList.remove('loop-one'); audio.loop = false; }
     });
 
-    document.querySelectorAll('[id$="-btn"]').forEach(btn => { const modal = document.getElementById(btn.id.replace('-btn', '-modal')); if (modal) btn.addEventListener('click', () => { if(modal.id === 'settings-modal') { tempSettings = {...visualizer.settings}; Object.entries(settingsMap).forEach(([id, key]) => {if(document.getElementById(id)) document.getElementById(id).value = visualizer.settings[key]; }); } modal.style.display = 'block'; }); });
+    document.querySelectorAll('.control-btn[id$="-btn"]').forEach(btn => { const modal = document.getElementById(btn.id.replace('-btn', '-modal')); if (modal) btn.addEventListener('click', () => { if(modal.id === 'settings-modal') { tempSettings = {...visualizer.settings}; Object.entries(settingsMap).forEach(([id, key]) => {if(document.getElementById(id)) document.getElementById(id).value = visualizer.settings[key]; }); } modal.style.display = 'block'; }); });
     document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', () => btn.closest('.modal').style.display = 'none'));
     
     document.getElementById('fullscreen-btn').addEventListener('click', () => document.getElementById('player-container').requestFullscreen());

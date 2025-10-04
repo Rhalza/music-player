@@ -60,13 +60,12 @@
 
     <audio id="audio" crossorigin="anonymous"></audio>
 
-    <!-- Modals -->
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <h2>Spectrum Settings</h2>
             <div class="modal-scroll-content">
-                <div class="setting"><label for="spectrum-type">Spectrum Type</label><select id="spectrum-type"><option value="monstercat">Monstercat</option><option value="ring_bars">Ring (Bars)</option><option value="ring_smooth">Ring (Smooth)</option><option value="bar_bars">Bar (Bars)</option><option value="linear_mirror_bars">Linear Mirror (Bars)</option></select></div>
+                <div class="setting"><label for="spectrum-type">Spectrum Type</label><select id="spectrum-type"><option value="monstercat">Monstercat</option><option value="ring_bars">Ring (Bars)</option><option value="ring_smooth">Ring (Smooth)</option><option value="bar_bars">Bar (Bars)</option><option value="bar_smooth">Bar (Smooth)</option><option value="linear_mirror_bars">Linear Mirror (Bars)</option><option value="linear_mirror_smooth">Linear Mirror (Smooth)</option></select></div>
                 <div class="setting"><label for="center-fill-type">Center Fill Type</label><select id="center-fill-type"><option value="image">Image</option><option value="hollow">Hollow</option><option value="spectrum_color">Spectrum Color Fill</option><option value="custom_color">Custom Color Fill</option></select></div>
                 <div class="setting" id="custom-color-setting" hidden><label for="solid-color-picker">Custom Fill Color</label><input type="color" id="solid-color-picker" value="#1A1A1A"></div>
                 <div class="setting"><label for="spectrum-color">Spectrum Color</label><input type="color" id="spectrum-color" value="#FFFFFF"></div>
@@ -75,32 +74,13 @@
                 <div class="setting"><label for="bar-amount">Number of Bars</label><input type="range" id="bar-amount" min="32" max="1024" step="2" value="256"></div>
                 <div class="setting"><label for="sensitivity">Sensitivity</label><input type="range" id="sensitivity" min="1" max="5" step="0.1" value="2.5"></div>
                 <div class="setting"><label for="size">Size</label><input type="range" id="size" min="0.1" max="1.5" step="0.01" value="1"></div>
+                <button id="apply-settings-btn" class="action-btn">Apply</button>
             </div>
         </div>
     </div>
 
-    <div id="playlist-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>Playlist</h2>
-            <div class="modal-scroll-content">
-                <ul id="playlist"></ul>
-                <div class="upload-buttons"><button id="upload-btn" class="action-btn">Upload Files</button><button id="upload-folder-btn" class="action-btn">Upload Folder</button></div>
-                <input type="file" id="song-upload" multiple accept="audio/*" hidden><input type="file" id="folder-upload" webkitdirectory directory multiple hidden>
-            </div>
-        </div>
-    </div>
-
-    <div id="eq-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>Equalizer</h2>
-            <div class="modal-scroll-content">
-                <div class="setting"><label for="eq-presets">Presets</label><select id="eq-presets"><option value="flat">Flat</option><option value="rock">Rock</option><option value="pop">Pop</option><option value="classical">Classical</option><option value="dance">Dance</option></select></div>
-                <div id="equalizer-bands"></div>
-            </div>
-        </div>
-    </div>
+    <div id="playlist-modal" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Playlist</h2><div class="modal-scroll-content"><ul id="playlist"></ul><div class="upload-buttons"><button id="upload-btn" class="action-btn">Upload Files</button><button id="upload-folder-btn" class="action-btn">Upload Folder</button></div><input type="file" id="song-upload" multiple accept="audio/*" hidden><input type="file" id="folder-upload" webkitdirectory directory multiple hidden></div></div></div>
+    <div id="eq-modal" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Equalizer</h2><div class="modal-scroll-content"><div class="setting"><label for="eq-presets">Presets</label><select id="eq-presets"><option value="flat">Flat</option><option value="rock">Rock</option><option value="pop">Pop</option><option value="classical">Classical</option><option value="dance">Dance</option></select></div><div id="equalizer-bands"></div></div></div></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <script src="js/visualizer.js"></script>
